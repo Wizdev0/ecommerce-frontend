@@ -12,14 +12,12 @@ export function TrackingPage( { cart } ) {
     
     useEffect(() => {
         const fetchTrackingData = async () => {
-            console.log("orderId:", orderId);
-            console.log("productId:", productId);
+            
             
             const url = `https://ecommerce-backend-yym4.onrender.com/api/orders/${orderId}?expand=products`
-            console.log(url);
+            
 
             const response = await axios.get(url);
-            console.log(response.data);
 
             setOrder(response.data);
         }

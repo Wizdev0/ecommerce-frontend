@@ -11,20 +11,29 @@ export function TrackingPage( { cart } ) {
     const [ order, setOrder ] = useState(null);
     
     useEffect(() => {
-        const fetchTrackingData = async () => {
-            
-            
-            const url = `https://ecommerce-backend-yym4.onrender.com/api/orders/${orderId}?expand=products`
-            
+    const fetchTrackingData = async () => {
+    try {
+      const url = `https://ecommerce-backend-yym4.onrender.com/api/orders/${orderId}?expand=products`;
 
-            const response = await axios.get(url);
+      console.log("Fetching:", url);
 
-            setOrder(response.data);
-        }
+      const response = await axios.get(url);
 
-        fetchTrackingData();
+      console.log("Response:", response.data);
 
-    }, [orderId]);
+      setOrder(response.data);
+    } catch (error) {
+      console.error("Request failed:", error);
+
+      if (error.response) {
+        console.log("Status:", error.response.status);
+        console.log("Data:", error.response.data);
+      }
+    }
+  };
+
+  fetchTrackingData();
+}, [orderId]);
 
     if(!order) {
         return null;
@@ -33,6 +42,8 @@ export function TrackingPage( { cart } ) {
     const orderProduct = order.products.find((orderProduct) => {
         return orderProduct.productId === productId;
     });
+
+    console.log("Matched product:", orderProduct);
 
     const totalDeliveryTime = orderProduct.estimatedDeliveryTimeMs - order.orderTimeMs;
     const timePassedMs = dayjs().valueOf() - order.orderTimeMs;
